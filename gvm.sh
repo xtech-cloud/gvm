@@ -59,13 +59,26 @@ if [ -f "gvm/${product}.tar.gz" ]; then
 fi
 
 
+# start write manifest
+echo '{'> gvm/${product}.meta
+echo '  "version":"'${ver}'",' >> gvm/${product}.meta
+echo '  "build":"'${build}'",' >> gvm/${product}.meta
+
 # generate md5
 if [ -f "gvm/${tar}" ]; then
     md5info=`md5sum gvm/${tar}`
     md5=${md5info:0:32}
 	echo file: ${tar} >> ${rd}
 	echo md5: ${md5} >> ${rd}
+
+    echo '  "gzip":{' >> gvm/${product}.meta
+    echo '    "file":"'${tar}'",' >> gvm/${product}.meta
+    echo '    "md5":"'${md5}'"' >> gvm/${product}.meta
+    echo '  }' >> gvm/${product}.meta
 fi
+
+# finish write manifest
+echo '}' >> gvm/${product}.meta
 
 # release notes
 echo '' >> ${rd}
